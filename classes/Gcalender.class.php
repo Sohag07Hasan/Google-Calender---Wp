@@ -107,11 +107,20 @@ class GCalendar{
 	   * Private helper function to get a cURL handle for POST actions with the correct options. The user has to be successfully authenticated with authenticate() first. 
 	   * @param string $url           The URL where the http request should go	   * 
 	   */
-	  private function curlPutHandle($url) {
-			
+	  private function curlPutHandle($url, $token) {
+		
+		if($token){
+			$headers[] = 'Authorization: Bearer ' . $token;
+			$headers[] = 'Content-Type:  application/json';
+		}
+
+		
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_URL, $url);
 		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+		if($headers){
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+		}		
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);		
 		curl_setopt($ch, CURLINFO_HEADER_OUT, true);		
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
@@ -205,12 +214,14 @@ class GCalendar{
 	 * Public function to update an existing event or patch the event
 	 * return the updated events
 	 * */
-	public function updateEvent($calendar_id, $event_id, $summar, $description, $event_start, $event_end, $time_zone){
+	public function updateEvent($calendar_id, $event_id, $summary, $description, $event_start, $event_end, $time_zone, $token){
+		if(empty($calendar_id) || empty($event_id) || empty($token)) return false;
+		
 		$url = self::CALENDER_EVENT . '/' . urlencode($calendar_id) . '/events/' . urlencode($event_id);
 		
-		$event = $this->getEvent($calendar_id, $event_id);
+		$event = $this->getEvent($calendar_id, $event_id, $token);
 		if($event){
-			$event->summary = $summar;
+			$event->summary = $summary;
 			$event->description = $description;
 			$event->start->dateTime = $event_start;	
 			$event->start->timeZone = $time_zone;	
@@ -221,7 +232,7 @@ class GCalendar{
 			return false;
 		}
 		
-		$ch = $this->curlPutHandle($url);
+		$ch = $this->curlPutHandle($url, $token);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($event));
 		$response = curl_exec($ch);
 		

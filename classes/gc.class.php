@@ -8,9 +8,7 @@ session_start();
 class Gc_Integration{
 	
 	public static $tracker = 1;
-	static $client;
-	static $calender;
-	
+		
 	/*
 	 * contains all the hooks
 	 */
@@ -67,12 +65,7 @@ class Gc_Integration{
 	static function save_tokens($tokens){
 		if($tokens){
 			$refresstoken = $tokens->refresh_token;
-					
-			$data = array(
-				'accesstoken' => $tokens->access_token,
-				'valid_till' => time() + $tokens->expires_in
-			);
-			update_option('gc_access_tokens', $data);
+						
 			update_option('gc_refress_token', $refresstoken);
 		}
 	}
@@ -144,7 +137,13 @@ class Gc_Integration{
 	 */
 	static function set_event($summary, $description, $event_start, $event_end, $calender_id){
 		$gcalender = self::get_calender();
-		$event = $gcalender->createEvent($_SESSION['gcToken'], $calender_id, $summary, $description, $event_start, $event_end, self::get_timezone());
+		self::set_accessToken();
+		if(self::is_new()){
+			$event = $gcalender->createEvent($_SESSION['gcToken'], $calender_id, $summary, $description, $event_start, $event_end, self::get_timezone());
+		}
+		else{
+			$event = $gcalender->updateEvent($calender_id, $_POST['event_prev_id'], $summary, $description, $event_start, $event_end, self::get_timezone(), $_SESSION['gcToken']);
+		}
 		return $event;
 	}
 	
@@ -316,6 +315,9 @@ class Gc_Integration{
 	}
 	
 	
+	/*
+	 * if the access token has expired it uses the refresh token to get a new access token
+	 * */
 	static function set_accessToken(){
 		if(isset($_SESSION['gcToken'])){
 			if($_SESSION['gcValidTime'] > time()) return;
@@ -331,10 +333,7 @@ class Gc_Integration{
 				
 	}
 	
-	static function get_tokens(){
-		return get_option('gc_access_tokens');
-	}
-	
+		
 	
 
 	/*
