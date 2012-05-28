@@ -7,8 +7,9 @@ Creates a nice interface to control the google calender with the posts, pages an
 		3. Visit Google Calender Api Console
 		4. Get necessary information from there and set some
 		5. While configuring of course you have to set the redirect url as shown
-		6. Set your GMT offset
-		7. When evey infomration is saved here, you are done
+		6. Set yout timezone
+		7. When evey infomration is saved then click on the Activate the calender link to activate the calender.
+		8. Then you are done
 		
  Set an Event:
 		1. While creating a post, page or custom post a meta box is present named "Google Calender"

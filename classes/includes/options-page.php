@@ -57,13 +57,12 @@
 	<h2>Calender Status</h2>
 	<?php
 		if(self::calender_enabled()){
-			echo "<div>Enabled</div>";
+			echo "<div>Activated</div>";
 		}
 		else{
 			$gcalender = self::get_calender();
-			$url = $gcalender->getAuthSubUrl();
-			echo "<div class='error'>Calender is not enabled! Click the link to enable it</div>";
-			echo "<a href='$url'>Connect with Google</a>";
+			$url = $gcalender->getAuthSubUrl();			
+			echo "<a href='$url'>Activate Google Calendar</a>";
 			$_SESSION['gc_redirect_url'] = $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 		}
 	?>
