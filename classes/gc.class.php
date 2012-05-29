@@ -251,12 +251,24 @@ class Gc_Integration{
 			update_option('gc_timezone', trim($_POST['gc_timezone']));
 		}
 		
+		if($_POST['deactivate_the_Claneder'] == "Y"){
+			self::deactivate_calender();
+		}
+		
 		$gc = get_option('gc_app_info');
 		$timezone = get_option('gc_timezone');
 		
 		include dirname(__FILE__) . '/includes/options-page.php';
 	}
 	
+	
+	/*
+	 * deletes the offline access and remvoe the refresh token
+	 * */
+	static function deactivate_calender(){
+		delete_option('gc_refress_token');
+	}
+	 
 	
 	/*
 	 * returns the timezone

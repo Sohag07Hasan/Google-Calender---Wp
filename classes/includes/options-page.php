@@ -23,7 +23,7 @@
 				<td cospan="2"><input size="60" type="text" name="gc_client_secret" value="<?php echo $gc['client_secret']; ?>" /></td>
 			</tr>
 			
-			<tr>
+			<tr> 
 				<td>Redirect Urls</td>
 				<td><input size="60" type="text" value="<?php echo get_option('siteurl') . '/wp-admin/google-calender?redirect=yes'; ?>" readonly /> </td>
 			</tr>
@@ -58,6 +58,17 @@
 	<?php
 		if(self::calender_enabled()){
 			echo "<div>Activated</div>";
+			?>
+			
+			<form  action='' method='post'>
+				<h3>Want to deactivate?</h3>
+				<p>
+					<input type='checkbox' name='deactivate_the_Claneder' value="Y" /> I agree
+					<input type="submit" value="Deactivate" />
+				</p>
+			</form>
+			
+			<?php
 		}
 		else{
 			$gcalender = self::get_calender();
