@@ -114,7 +114,13 @@ class Gc_Integration{
 			if(self::$tracker > 1) return;
 			
 			$start_time = trim($_POST['gc-event-date_start']) . ' ' . trim($_POST['gc-event-time_start']);
-			$end_time = trim($_POST['gc-event-date_end']) . ' ' . trim($_POST['gc-event-time_end']);
+			if(empty($_POST['gc-event-time_end'])){
+				$end_time = '11:59 PM';
+			}
+			else{
+				$end_time = $_POST['gc-event-time_end'];
+			}
+			$end_time = trim($_POST['gc-event-date_end']) . ' ' .$end_time;
 			
 			$title = self::sanitized_title(trim($_POST['gc-event-title']), $post->post_title);
 			$des = trim($_POST['gc-event-description']);
